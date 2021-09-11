@@ -9,12 +9,14 @@
   <title>SONIMAGE</title>
   <style>
   body{
-    font-size:30px
+    font-size:40px
+    margin:0px;
+    padding:0px;
   }
   input {
     font-size:50px;
-    margin:1px;
-    padding:1px;
+    margin:0px;
+    padding:0px;
     height:1.5em;
     -webkit-appearance: none;
     border-radius: 0;
@@ -22,15 +24,16 @@
   </style>
 </head>
 
-<body bgcolor="#303030" text="#cccccc" onmousedown="preventFocus(event);" style="margin:20px;">
+<body bgcolor="#303030" text="#cccccc" style="margin:20px;" tabindex="-1">
   <p>装置番号
      <input type="number" id="bus_id" oninput="CreatePatientID();" onfocus="toggleFocus(this)" onblur="toggleFocus(this)" min="0" max="99" value='' style="width:2em;">
-     <input type="button" id="abd_btn" onmousedown="preventFocus();" value="腹部(A)" style="width:5em;height:2em" tabindex="-1">
-     <input type="button" id="brest_btn" onmousedown="preventFocus();" value="乳腺(B)" style="width:5em;height:2em" tabindex="-1"></p>
+     <input type="button" id="abd_btn" value="腹部(A)" style="width:5em;height:2em" tabindex="-1">
+     <input type="button" id="brest_btn" value="乳腺(B)" style="width:5em;height:2em" tabindex="-1"></p>
   <p>受付暗号
-     <input type="number" id="input_id" oninput="CreatePatientID();" onfocus="toggleFocus(this)" onblur="toggleFocus(this)" min="0" max="99999" value='' style="width:5em;">
-     <input type="button" id="clear_btn" onmousedown="preventFocus();" value="×" style="width:100px;" tabindex="-1"></p>
-  <p><input type="text"   id="submit_id" oninput="CreatePatientID();" onfocus="toggleFocus(this)" onblur="toggleFocus(this)" style="font-size:0.7em;width:13em;"></p>
+     <input type="number" id="input_id" oninput="CreatePatientID();" onfocus="toggleFocus(this)" onblur="toggleFocus(this)" min="0" max="99999" value='' style="width:5em;" >
+     <input type="button" id="clear_btn" value="×" style="width:100px;" tabindex="-1"></p>
+  <p>手動入力
+     <input type="text"   id="submit_id" oninput="CreatePatientID();" onfocus="toggleFocus(this)" onblur="toggleFocus(this)" style="font-size:1em;width:13em;"></p>
   <p><div id="qrcodearea" tabindex="-1"></div></p>
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -46,7 +49,7 @@
     var brest_btn = document.getElementById("brest_btn");
     var clear_btn = document.getElementById("clear_btn");
 
-    clear_btn.style.backgroundColor = "darkgray";
+    clear_btn.style.backgroundColor = "lavender";
     abd_btn.style.backgroundColor = "deepskyblue";
     brest_btn.style.backgroundColor = "darkgray";
 
@@ -59,15 +62,18 @@
     brest_btn.addEventListener("click",function(){
       abd_btn.style.backgroundColor = "darkgray";
       brest_btn.style.backgroundColor = "deeppink";
+      input_id.focus();
       CreatePatientID();
     });
     abd_btn.addEventListener("click",function(){
       abd_btn.style.backgroundColor = "deepskyblue";
       brest_btn.style.backgroundColor = "darkgray";
+      input_id.focus();
       CreatePatientID();
     });
     clear_btn.addEventListener("click",function(){
-      input_id.value=0;
+      input_id.value='';
+      input_id.focus();
       CreatePatientID();
     });
 
@@ -97,6 +103,13 @@
     var abd_btn = document.getElementById("abd_btn");
     var brest_btn = document.getElementById("brest_btn");
     var exam;
+
+  
+    if( input_id.value != input_id.value.match(/[0-9]+/g) ){
+      input_id.value != input_id.value.match(/[0-9]+/g);
+    }
+
+
     if( abd_btn.style.backgroundColor == "deepskyblue" ){
       exam = 'A';
     }else{
@@ -109,7 +122,7 @@
     today = yy+mm+dd;
     bus_id.value = ( '00' + bus_id.value ).slice( -2 );
     input_id.value = ( '00000' + input_id.value ).slice( -5 );
-    submit_id.value = today + exam+( '00' + bus_id.value ).slice( -2 )+'-'+( '00000' + input_id.value ).slice( -5 );
+    submit_id.value = today + exam+bus_id.value+'-'+input_id.value;
 
     localStorage.BusNumber=bus_id.value;
 
@@ -118,18 +131,6 @@
     $('#qrcodearea').html('');
     $('#qrcodearea').qrcode({width: 512, height: 512, text: strqrsjis});
     $('#id').text(strqrorg);
-  }
-
-  function preventFocus(e) {
-    if( e && (e.srcElement.id == "bus_id" ||  e.srcElement.id == "input_id" ||  e.srcElement.id == "submit_id"))
-    {
-      e.stopPropagation();
-    }
-    else
-    {
-      var ae = document.activeElement;
-      setTimeout(function() { ae.focus() }, 1);
-    }
   }
   </Script>
 </body>
