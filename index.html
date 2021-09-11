@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <html lang="ja">
-<meta charset="UTF-8">
-
+    
 <head>
+<meta charset="UTF-8">
+<meta name='apple-mobile-web-app-capable' content='yes'>
+<meta name='application-name' content='SNiBLE画像アップロード'/>
+<meta name='apple-mobile-web-app-title' content='SNiBLE画像アップロード'>
   <title>SONIMAGE</title>
   <style>
   body{
@@ -10,8 +13,9 @@
   }
   input {
     font-size:50px;
-    margin:5px;
-    height:70px;
+    margin:0px;
+    padding:0px;
+    height:1.5em;
     -webkit-appearance: none;
     border-radius: 0;
   }
@@ -19,14 +23,14 @@
 </head>
 
 <body bgcolor="#303030" text="#cccccc" onmousedown="preventFocus(event);">
-  <p>バス番号（装置番号）
-     <input type="number" id="bus_id" oninput="CreatePatientID();" min="0" max="99" value='' style="width:2em;"> </p>
-  <p>受信者受付場暗号
-     <input type="number" id="input_id" oninput="CreatePatientID();" min="0" max="99999" value='' style="width:5em;">
+  <p>装置番号
+     <input type="number" id="bus_id" oninput="CreatePatientID();" onfocus="toggleFocus(this)" onblur="toggleFocus(this)" min="0" max="99" value='' style="width:2em;">
+     <input type="button" id="abd_btn" onmousedown="preventFocus();" value="腹部(A)" style="width:5em;height:2em">
+     <input type="button" id="brest_btn" onmousedown="preventFocus();" value="乳腺(B)" style="width:5em;height:2em"></p>
+  <p>受付暗号
+     <input type="number" id="input_id" oninput="CreatePatientID();" onfocus="toggleFocus(this)" onblur="toggleFocus(this)" min="0" max="99999" value='' style="width:5em;">
      <input type="button" id="clear_btn" onmousedown="preventFocus();" value="×" style="width:100px;"></p>
-  <p><input type="button" id="abd_btn" onmousedown="preventFocus();" value="腹部(A)" style="width:7em;height:3em">
-     <input type="button" id="brest_btn" onmousedown="preventFocus();" value="乳腺(B)" style="width:7em;height:3em"></p>
-  <p><input type="text"   id="submit_id" oninput="CreatePatientID();" style="width:13em;background-color:#A0A0A0;"></p>
+  <p><input type="text"   id="submit_id" oninput="CreatePatientID();" onfocus="toggleFocus(this)" onblur="toggleFocus(this)" style="font-size:0.7em;width:13em;"></p>
   <p><div id="qrcodearea"></div></p>
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -37,6 +41,7 @@
     // input要素を取得
     var bus_id = document.getElementById("bus_id");
     var input_id = document.getElementById("input_id");
+    var submit_id = document.getElementById("submit_id");
     var abd_btn = document.getElementById("abd_btn");
     var brest_btn = document.getElementById("brest_btn");
     var clear_btn = document.getElementById("clear_id");
@@ -52,7 +57,7 @@
     });
     brest_btn.addEventListener("click",function(){
       abd_btn.style.backgroundColor = "darkgray";
-      brest_btn.style.backgroundColor = "deepskyblue";
+      brest_btn.style.backgroundColor = "deeppink";
       CreatePatientID();
     });
 
@@ -62,9 +67,20 @@
     }
     bus_id.value = localStorage.BusNumber;
 
+    bus_id.style.backgroundColor="lavender";
+    input_id.style.backgroundColor="lavender";
+    submit_id.style.backgroundColor="lavender";
+    input_id.focus();
+
     CreatePatientID();
 
   });
+
+  function toggleFocus(el)
+  {
+    el.style.backgroundColor =  el.style.backgroundColor=="pink" ? "lavender" : "pink";
+  }
+
   function CreatePatientID() {
     var bus_id = document.getElementById("bus_id");
     var input_id = document.getElementById("input_id");
@@ -94,7 +110,7 @@
   }
 
   function preventFocus(e) {
-    if( e && (e.srcElement.id == "bus_id" ||  e.srcElement.id == "input_id" ||  e.srcElement.id == "manual_id"))
+    if( e && (e.srcElement.id == "bus_id" ||  e.srcElement.id == "input_id" ||  e.srcElement.id == "submit_id"))
     {
       e.stopPropagation();
     }
