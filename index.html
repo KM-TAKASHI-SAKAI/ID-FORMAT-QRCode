@@ -13,8 +13,8 @@
   }
   input {
     font-size:50px;
-    margin:0px;
-    padding:0px;
+    margin:1px;
+    padding:1px;
     height:1.5em;
     -webkit-appearance: none;
     border-radius: 0;
@@ -22,7 +22,7 @@
   </style>
 </head>
 
-<body bgcolor="#303030" text="#cccccc" onmousedown="preventFocus(event);">
+<body bgcolor="#303030" text="#cccccc" onmousedown="preventFocus(event);" style="margin:20px;">
   <p>装置番号
      <input type="number" id="bus_id" oninput="CreatePatientID();" onfocus="toggleFocus(this)" onblur="toggleFocus(this)" min="0" max="99" value='' style="width:2em;">
      <input type="button" id="abd_btn" onmousedown="preventFocus();" value="腹部(A)" style="width:5em;height:2em">
@@ -44,7 +44,7 @@
     var submit_id = document.getElementById("submit_id");
     var abd_btn = document.getElementById("abd_btn");
     var brest_btn = document.getElementById("brest_btn");
-    var clear_btn = document.getElementById("clear_id");
+    var clear_btn = document.getElementById("clear_btn");
 
     abd_btn.style.backgroundColor = "deepskyblue";
     brest_btn.style.backgroundColor = "darkgray";
@@ -58,6 +58,15 @@
     brest_btn.addEventListener("click",function(){
       abd_btn.style.backgroundColor = "darkgray";
       brest_btn.style.backgroundColor = "deeppink";
+      CreatePatientID();
+    });
+    abd_btn.addEventListener("click",function(){
+      abd_btn.style.backgroundColor = "deepskyblue";
+      brest_btn.style.backgroundColor = "darkgray";
+      CreatePatientID();
+    });
+    clear_btn.addEventListener("click",function(){
+      input_id.value=0;
       CreatePatientID();
     });
 
@@ -86,7 +95,6 @@
     var input_id = document.getElementById("input_id");
     var abd_btn = document.getElementById("abd_btn");
     var brest_btn = document.getElementById("brest_btn");
-    var clear_btn = document.getElementById("clear_id");
     var exam;
     if( abd_btn.style.backgroundColor == "deepskyblue" ){
       exam = 'A';
@@ -101,6 +109,8 @@
     bus_id.value = ( '00' + bus_id.value ).slice( -2 );
     input_id.value = ( '00000' + input_id.value ).slice( -5 );
     submit_id.value = today + exam+( '00' + bus_id.value ).slice( -2 )+'-'+( '00000' + input_id.value ).slice( -5 );
+
+    localStorage.BusNumber=bus_id.value;
 
     var strqrorg = $('#submit_id').val();
     var strqrsjis = Encoding.convert(strqrorg, 'SJIS');
