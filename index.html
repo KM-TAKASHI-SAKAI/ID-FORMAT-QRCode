@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ja">
+<meta charset="UTF-8">
+
+<head>
+  <title>SONIMAGE</title>
+  <style>
+  body{
+    font-size:30px
+  }
+  input {
+    font-size:50px;
+    margin:5px;
+    height:70px;
+  }
+  </style>
+</head>
+
+<body bgcolor="#303030" text="#cccccc" onmousedown="preventFocus(event);">
+  <p>バス番号（装置番号）
+     <input type="number" id="bus_id" oninput="CreatePatientID();" min="0" max="99" value='' style="width:2em;"> </p>
+  <p>受信者受付場暗号
+     <input type="number" id="input_id" oninput="CreatePatientID();" min="0" max="99999" value='' style="width:5em;">
+     <input type="button" id="clear_btn" onmousedown="preventFocus();" value="×" style="width:100px;"></p>
+  <p><input type="button" id="abd_btn" onmousedown="preventFocus();" value="腹部(A)" style="width:7em;height:3em">
+     <input type="button" id="brest_btn" onmousedown="preventFocus();" value="乳腺(B)" style="width:7em;height:3em"></p>
+  <p><input type="text"   id="submit_id" oninput="CreatePatientID();" style="width:13em;background-color:#A0A0A0;"></p>
+  <p><div id="qrcodearea"></div></p>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/encoding-japanese/1.0.30/encoding.min.js"></script>
+  <script>
+  window.addEventListener('DOMContentLoaded', function(){
+    // input要素を取得
+    var bus_id = document.getElementById("bus_id");
+    var input_id = document.getElementById("input_id");
+    var abd_btn = document.getElementById("abd_btn");
+    var brest_btn = document.getElementById("brest_btn");
+    var clear_btn = document.getElementById("clear_id");
+
+    abd_btn.style.backgroundColor = "deepskyblue";
+    brest_btn.style.backgroundColor = "darkgray";
+
+
+    abd_btn.addEventListener("click",function(){
+      abd_btn.style.backgroundColor = "deepskyblue";
+      brest_btn.style.backgroundColor = "darkgray";
+      CreatePatientID();
+    });
+    brest_btn.addEventListener("click",function(){
+      abd_btn.style.backgroundColor = "darkgray";
+      brest_btn.style.backgroundColor = "deepskyblue";
+      CreatePatientID();
+    });
+
+    var bus_id = document.getElementById("bus_id");
+    if( localStorage.getItem( "BusNumber" )==null ){
+      localStorage.BusNumber=0;
+    }
+    bus_id.value = localStorage.BusNumber;
+
+    CreatePatientID();
+
+  });
+  function CreatePatientID() {
+    var bus_id = document.getElementById("bus_id");
+    var input_id = document.getElementById("input_id");
+    var abd_btn = document.getElementById("abd_btn");
+    var brest_btn = document.getElementById("brest_btn");
+    var clear_btn = document.getElementById("clear_id");
+    var exam;
+    if( abd_btn.style.backgroundColor == "deepskyblue" ){
+      exam = 'A';
+    }else{
+      exam = 'B';
+    }
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yy = today.getFullYear()%100;
+    today = yy+mm+dd;
+    bus_id.value = ( '00' + bus_id.value ).slice( -2 );
+    input_id.value = ( '00000' + input_id.value ).slice( -5 );
+    submit_id.value = today + exam+( '00' + bus_id.value ).slice( -2 )+'-'+( '00000' + input_id.value ).slice( -5 );
+
+    var strqrorg = $('#submit_id').val();
+    var strqrsjis = Encoding.convert(strqrorg, 'SJIS');
+    $('#qrcodearea').html('');
+    $('#qrcodearea').qrcode({width: 512, height: 512, text: strqrsjis});
+    $('#id').text(strqrorg);
+  }
+
+  function preventFocus(e) {
+    if( e && (e.srcElement.id == "bus_id" ||  e.srcElement.id == "input_id" ||  e.srcElement.id == "manual_id"))
+    {
+      e.stopPropagation();
+    }
+    else
+    {
+      var ae = document.activeElement;
+      setTimeout(function() { ae.focus() }, 1);
+    }
+  }
+  </Script>
+</body>
+</html>
+
