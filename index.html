@@ -25,13 +25,13 @@
 <body bgcolor="#303030" text="#cccccc" onmousedown="preventFocus(event);" style="margin:20px;">
   <p>装置番号
      <input type="number" id="bus_id" oninput="CreatePatientID();" onfocus="toggleFocus(this)" onblur="toggleFocus(this)" min="0" max="99" value='' style="width:2em;">
-     <input type="button" id="abd_btn" onmousedown="preventFocus();" value="腹部(A)" style="width:5em;height:2em">
-     <input type="button" id="brest_btn" onmousedown="preventFocus();" value="乳腺(B)" style="width:5em;height:2em"></p>
+     <input type="button" id="abd_btn" onmousedown="preventFocus();" value="腹部(A)" style="width:5em;height:2em" tabindex="-1">
+     <input type="button" id="brest_btn" onmousedown="preventFocus();" value="乳腺(B)" style="width:5em;height:2em" tabindex="-1"></p>
   <p>受付暗号
      <input type="number" id="input_id" oninput="CreatePatientID();" onfocus="toggleFocus(this)" onblur="toggleFocus(this)" min="0" max="99999" value='' style="width:5em;">
-     <input type="button" id="clear_btn" onmousedown="preventFocus();" value="×" style="width:100px;"></p>
+     <input type="button" id="clear_btn" onmousedown="preventFocus();" value="×" style="width:100px;" tabindex="-1"></p>
   <p><input type="text"   id="submit_id" oninput="CreatePatientID();" onfocus="toggleFocus(this)" onblur="toggleFocus(this)" style="font-size:0.7em;width:13em;"></p>
-  <p><div id="qrcodearea"></div></p>
+  <p><div id="qrcodearea" tabindex="-1"></div></p>
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
@@ -46,6 +46,7 @@
     var brest_btn = document.getElementById("brest_btn");
     var clear_btn = document.getElementById("clear_btn");
 
+    clear_btn.style.backgroundColor = "darkgray";
     abd_btn.style.backgroundColor = "deepskyblue";
     brest_btn.style.backgroundColor = "darkgray";
 
